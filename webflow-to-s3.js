@@ -29,24 +29,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     console.log("Form found:", form);
 
-    // Select the submit button
-    const submitButton = form.querySelector('button[type="submit"]');
+    // Select the submit button using the custom attribute for input[type="submit"]
+    const submitButton = form.querySelector('input[type="submit"][melodev="bt-submit"]');
+    
+    if (!submitButton) {
+        console.error('Submit button with custom attribute melodev="bt-submit" not found.');
+        return;
+    }
+    console.log('Submit button found:', submitButton);
 
     // Intercept form submission
     form.addEventListener('submit', async function(event) {
         event.preventDefault();
         console.log("Form submission intercepted.");
 
-        // Disable the button and change text to 'Submitting...'
-        if (submitButton) {
-            submitButton.textContent = "Submitting...";
-            submitButton.disabled = true;
-        }
+        // Disable the button and change the value to 'Submitting...'
+        submitButton.value = "Submitting...";
+        submitButton.disabled = true;
 
         // Optionally, display a spinner or loading indicator
         const spinner = document.createElement('span');
         spinner.className = 'spinner';
-        submitButton.appendChild(spinner);
+        submitButton.parentNode.insertBefore(spinner, submitButton.nextSibling);
 
         // Get form fields
         const nameInput = document.querySelector('#Name');
@@ -59,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!nameInput || !lastInput || !ageInput || !emailInput || !phoneInput || !cityInput || !fileInput) {
             console.error('One or more form fields not found.');
-            submitButton.textContent = "Submit";
+            submitButton.value = "Someter";  // Revert button text if there's an error
             submitButton.disabled = false;
             return;
         }
@@ -76,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!file) {
             alert('Please upload a file.');
             console.error('No file uploaded.');
-            submitButton.textContent = "Submit";
+            submitButton.value = "Someter";  // Revert button text if there's an error
             submitButton.disabled = false;
             return;
         }
@@ -127,13 +131,13 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 console.error('Failed to submit form:', response.statusText);
                 alert('Failed to submit form. Please try again.');
-                submitButton.textContent = "Submit";
+                submitButton.value = "Someter";  // Revert button text on failure
                 submitButton.disabled = false;
             }
         } catch (error) {
             console.error('Error submitting form:', error);
             alert('An error occurred. Please try again.');
-            submitButton.textContent = "Submit";
+            submitButton.value = "Someter";  // Revert button text on error
             submitButton.disabled = false;
         } finally {
             if (spinner) spinner.remove();  // Remove spinner after completion
