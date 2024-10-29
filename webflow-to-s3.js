@@ -10,8 +10,15 @@
         }
         console.log("Form found:", form);
 
-        // Select the submit button
-        const submitButton = form.querySelector('button[type="submit"]');
+        // Select the submit button using the custom attribute
+        const submitButton = form.querySelector('button[melodev="bt-submit"]');
+        
+        if (!submitButton) {
+            console.error('Submit button with custom attribute melodev="bt-submit" not found.');
+            return;
+        } else {
+            console.log('Submit button found:', submitButton);
+        }
 
         // Intercept form submission
         form.addEventListener('submit', async function(event) {
@@ -19,9 +26,8 @@
             console.log("Form submission intercepted.");
 
             // Change button text to 'Submitting...'
-            if (submitButton) {
-                submitButton.textContent = "Submitting...";
-            }
+            submitButton.textContent = "Submitting...";
+            console.log("Button text changed to 'Submitting...'");
 
             // Get form fields
             const nameInput = document.querySelector('#Name');
@@ -34,9 +40,7 @@
 
             if (!nameInput || !lastInput || !ageInput || !emailInput || !phoneInput || !cityInput || !fileInput) {
                 console.error('One or more form fields not found.');
-                if (submitButton) {
-                    submitButton.textContent = "Submit"; // Revert button text if there's an error
-                }
+                submitButton.textContent = "Submit"; // Revert button text if there's an error
                 return;
             }
             console.log("All input fields found.");
@@ -52,9 +56,7 @@
             if (!file) {
                 alert('Please upload a file.');
                 console.error('No file uploaded.');
-                if (submitButton) {
-                    submitButton.textContent = "Submit"; // Revert button text if there's an error
-                }
+                submitButton.textContent = "Submit"; // Revert button text if there's an error
                 return;
             }
             console.log("File found:", file);
@@ -102,16 +104,12 @@
                 } else {
                     console.error('Failed to submit form:', response.statusText);
                     alert('Failed to submit form. Please try again.');
-                    if (submitButton) {
-                        submitButton.textContent = "Submit"; // Revert button text on failure
-                    }
+                    submitButton.textContent = "Submit"; // Revert button text on failure
                 }
             } catch (error) {
                 console.error('Error submitting form:', error);
                 alert('An error occurred. Please try again.');
-                if (submitButton) {
-                    submitButton.textContent = "Submit"; // Revert button text on error
-                }
+                submitButton.textContent = "Submit"; // Revert button text on error
             }
         });
     });
