@@ -75,7 +75,7 @@
 
             // Send the form data to your n8n webhook
             try {
-                const response = await fetch('https://sergiolopez94.app.n8n.cloud/webhook-test/bf-pueblo-upload', {
+                const response = await fetch('https://n8n.melodev.com/webhook-test/bf-pueblo-upload', {
                     method: 'POST',
                     body: formData,
                 });
