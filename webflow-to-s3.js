@@ -45,6 +45,7 @@
             }
             console.log("File found:", file);
 
+            // Generate a unique filename using UUID
             function generateUUID() {
                 return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
                     const r = (Math.random() * 16) | 0;
@@ -57,7 +58,7 @@
             const uniqueFilename = `${generateUUID()}.${fileExtension}`;
             console.log("Generated unique filename:", uniqueFilename);
 
-            // Prepare the form data for the request
+            // Prepare the form data with the UUID filename only
             const formData = new FormData();
             formData.append('name', name);
             formData.append('last', last);
@@ -65,9 +66,8 @@
             formData.append('email', email);
             formData.append('phone', phone);
             formData.append('city', city);
-            formData.append('file', file, uniqueFilename);  // Attach file with new unique filename
-            formData.append('filename', file.name); // Add the original filename (including extension)
-            console.log("Form data prepared:", formData);
+            formData.append('file', new File([file], uniqueFilename));  // Use UUID filename only
+            console.log("Form data prepared with UUID filename:", formData);
 
             try {
                 const response = await fetch('https://n8n.melodev.com/webhook-test/bf-pueblo-upload', {
@@ -81,6 +81,7 @@
                     const data = await response.json();
                     console.log("Parsed JSON response data:", data);
 
+                    // Check if redirectUrl is present in response and redirect
                     if (data.redirectUrl) {
                         console.log("Redirecting to:", data.redirectUrl);
                         window.location.href = data.redirectUrl;
