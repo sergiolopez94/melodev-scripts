@@ -17,7 +17,7 @@
             console.log("Form submission intercepted.");
 
             // Get form fields
-            const nameInput = document.querySelector('#name');
+            const nameInput = document.querySelector('#Name');
             const emailInput = document.querySelector('#email');
             const fileInput = document.querySelector('#file-upload');
 
