@@ -80,9 +80,16 @@
                     body: formData,
                 });
 
+                // Wait for the webhook response and check if it was successful
                 if (response.ok) {
-                    alert('Form submitted successfully!');
                     console.log("Form submitted successfully:", response);
+
+                    // Optional: Parse response data if you need it
+                    const responseData = await response.json();
+                    console.log("Webhook response data:", responseData);
+
+                    // Redirect to a new page
+                    window.location.href = "https://your-redirect-url.com";  // Replace with your desired URL
                 } else {
                     console.error('Failed to submit form:', response.statusText);
                     alert('Failed to submit form. Please try again.');
