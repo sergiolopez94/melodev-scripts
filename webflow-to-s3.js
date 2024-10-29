@@ -1,6 +1,25 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log("JavaScript loaded and ready.");
 
+    // Add CSS for the spinner dynamically
+    const style = document.createElement('style');
+    style.textContent = `
+        .spinner {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    `;
+    document.head.appendChild(style);
+
     // Select the Webflow form using the specific ID
     const form = document.querySelector('#wf-form-Sorteo-Black-Friday');
 
@@ -10,10 +29,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     console.log("Form found:", form);
 
+    // Select the submit button
+    const submitButton = form.querySelector('button[type="submit"]');
+
     // Intercept form submission
     form.addEventListener('submit', async function(event) {
         event.preventDefault();
         console.log("Form submission intercepted.");
+
+        // Disable the button and change text to 'Submitting...'
+        if (submitButton) {
+            submitButton.textContent = "Submitting...";
+            submitButton.disabled = true;
+        }
+
+        // Optionally, display a spinner or loading indicator
+        const spinner = document.createElement('span');
+        spinner.className = 'spinner';
+        submitButton.appendChild(spinner);
 
         // Get form fields
         const nameInput = document.querySelector('#Name');
@@ -26,6 +59,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!nameInput || !lastInput || !ageInput || !emailInput || !phoneInput || !cityInput || !fileInput) {
             console.error('One or more form fields not found.');
+            submitButton.textContent = "Submit";
+            submitButton.disabled = false;
             return;
         }
         console.log("All input fields found.");
@@ -41,6 +76,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!file) {
             alert('Please upload a file.');
             console.error('No file uploaded.');
+            submitButton.textContent = "Submit";
+            submitButton.disabled = false;
             return;
         }
         console.log("File found:", file);
@@ -65,8 +102,8 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append('email', email);
         formData.append('phone', phone);
         formData.append('city', city);
-        formData.append('file', file, uniqueFilename);  // Attach file with new unique filename
-        formData.append('filename', uniqueFilename);    // Add the unique filename (UUID + extension) as a separate field
+        formData.append('file', file, uniqueFilename);
+        formData.append('filename', uniqueFilename);
         console.log("Form data prepared:", formData);
 
         try {
@@ -90,10 +127,16 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 console.error('Failed to submit form:', response.statusText);
                 alert('Failed to submit form. Please try again.');
+                submitButton.textContent = "Submit";
+                submitButton.disabled = false;
             }
         } catch (error) {
             console.error('Error submitting form:', error);
             alert('An error occurred. Please try again.');
+            submitButton.textContent = "Submit";
+            submitButton.disabled = false;
+        } finally {
+            if (spinner) spinner.remove();  // Remove spinner after completion
         }
     });
 });
