@@ -1,5 +1,4 @@
-<script>
   document.addEventListener("DOMContentLoaded", function() {
-    console.log("JavaScript loaded and ready.")
+    console.log("JavaScript loaded and ready.");
   });
-</script>
+
