@@ -1,26 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log("JavaScript loaded and ready.");
 
-    // Add CSS for the spinner dynamically
-    const style = document.createElement('style');
-    style.textContent = `
-        .spinner {
-            display: inline-flex;
-            width: 12px;
-            height: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-left: 8px; /* Space between text and spinner */
-            vertical-align: middle;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    `;
-    document.head.appendChild(style);
-
     // Select the Webflow form using the specific ID
     const form = document.querySelector('#wf-form-Sorteo-Black-Friday');
 
@@ -44,14 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         console.log("Form submission intercepted.");
 
-        // Disable the button and change the value to 'Submitting...'
-        submitButton.value = "Submitting...";
+        // Disable the button and change the value to 'Por favor espere...'
+        submitButton.value = "Por favor espere...";
         submitButton.disabled = true;
-
-        // Display the spinner inline next to the text
-        const spinner = document.createElement('span');
-        spinner.className = 'spinner';
-        submitButton.parentNode.insertBefore(spinner, submitButton.nextSibling);
 
         // Get form fields
         const nameInput = document.querySelector('#Name');
@@ -66,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('One or more form fields not found.');
             submitButton.value = "Someter";  // Revert button text if there's an error
             submitButton.disabled = false;
-            if (spinner) spinner.remove();
             return;
         }
         console.log("All input fields found.");
@@ -84,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('No file uploaded.');
             submitButton.value = "Someter";  // Revert button text if there's an error
             submitButton.disabled = false;
-            if (spinner) spinner.remove();
             return;
         }
         console.log("File found:", file);
@@ -142,10 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('An error occurred. Please try again.');
             submitButton.value = "Someter";  // Revert button text on error
             submitButton.disabled = false;
-        } finally {
-            if (spinner) spinner.remove();  // Remove spinner after completion
         }
     });
 });
-
-//4:54pm
+//4:57
