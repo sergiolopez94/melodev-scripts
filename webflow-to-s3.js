@@ -82,7 +82,7 @@
             console.log("Form data prepared with UUID filename:", formData);
 
             try {
-                const response = await fetch('https://n8n.melodev.com/webhook-test/bf-pueblo-upload', {
+                const response = await fetch('https://n8n.melodev.com/webhook/bf-pueblo-upload', {
                     method: 'POST',
                     body: formData,
                 });
