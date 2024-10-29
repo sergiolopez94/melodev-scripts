@@ -4,15 +4,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add CSS for the spinner dynamically
     const style = document.createElement('style');
     style.textContent = `
-        .spinner {
+        .submit-container {
             display: inline-block;
+            position: relative;
+        }
+        .spinner {
             width: 12px;
             height: 12px;
             border: 2px solid rgba(255, 255, 255, 0.5);
             border-top-color: #fff;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-left: 8px;
+            position: absolute;
+            right: 10px; /* Adjust as needed to position it closer to text */
+            top: 50%;
+            transform: translateY(-50%);
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
@@ -38,6 +44,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     console.log('Submit button found:', submitButton);
 
+    // Wrap the submit button in a container to handle positioning
+    const submitContainer = document.createElement('span');
+    submitContainer.className = 'submit-container';
+    submitButton.parentNode.insertBefore(submitContainer, submitButton);
+    submitContainer.appendChild(submitButton);
+
     // Intercept form submission
     form.addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -47,10 +59,10 @@ document.addEventListener('DOMContentLoaded', function() {
         submitButton.value = "Submitting...";
         submitButton.disabled = true;
 
-        // Optionally, display a spinner or loading indicator
+        // Display spinner next to text within the container
         const spinner = document.createElement('span');
         spinner.className = 'spinner';
-        submitButton.parentNode.insertBefore(spinner, submitButton.nextSibling);
+        submitContainer.appendChild(spinner);
 
         // Get form fields
         const nameInput = document.querySelector('#Name');
@@ -65,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('One or more form fields not found.');
             submitButton.value = "Someter";  // Revert button text if there's an error
             submitButton.disabled = false;
+            if (spinner) spinner.remove();
             return;
         }
         console.log("All input fields found.");
@@ -82,6 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('No file uploaded.');
             submitButton.value = "Someter";  // Revert button text if there's an error
             submitButton.disabled = false;
+            if (spinner) spinner.remove();
             return;
         }
         console.log("File found:", file);
