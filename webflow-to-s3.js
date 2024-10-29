@@ -18,26 +18,27 @@
 
             // Get form fields
             const nameInput = document.querySelector('#Name');
+            const lastInput = document.querySelector('#Last');
+            const ageInput = document.querySelector('#Age');
             const emailInput = document.querySelector('#email');
-            const fileInput = document.querySelector('#file-upload');
+            const phoneInput = document.querySelector('#phone');
+            const cityInput = document.querySelector('#city');
+            const fileInput = document.querySelector('#file');
 
             // Check if each field exists before accessing its value
-            if (!nameInput) {
-                console.error('Name input field not found.');
-                return;
-            }
-            if (!emailInput) {
-                console.error('Email input field not found.');
-                return;
-            }
-            if (!fileInput) {
-                console.error('File upload input field not found.');
+            if (!nameInput || !lastInput || !ageInput || !emailInput || !phoneInput || !cityInput || !fileInput) {
+                console.error('One or more form fields not found.');
                 return;
             }
             console.log("All input fields found.");
 
+            // Collect values from form inputs
             const name = nameInput.value;
+            const last = lastInput.value;
+            const age = ageInput.value;
             const email = emailInput.value;
+            const phone = phoneInput.value;
+            const city = cityInput.value;
             const file = fileInput.files[0];
 
             if (!file) {
@@ -64,7 +65,11 @@
             // Prepare the form data for the request
             const formData = new FormData();
             formData.append('name', name);
+            formData.append('last', last);
+            formData.append('age', age);
             formData.append('email', email);
+            formData.append('phone', phone);
+            formData.append('city', city);
             formData.append('file', file, uniqueFilename);  // Attach file with new unique filename
             console.log("Form data prepared:", formData);
 
