@@ -78,9 +78,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (data.redirectUrl) {
                     console.log("Redirecting to:", data.redirectUrl);
-                    window.location.href = data.redirectUrl;
+                    window.location.href = data.redirectUrl; // Redirect to the provided URL
                 } else {
                     console.error("No redirectUrl found in response:", data);
+                    alert('Unexpected response. Please try again.');
+                    submitButton.value = "Someter";  // Revert button text if no redirectUrl
+                    submitButton.disabled = false;
                 }
             } else {
                 console.error('Failed to submit form:', response.statusText);
