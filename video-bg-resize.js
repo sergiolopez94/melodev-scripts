@@ -1,6 +1,6 @@
 function resizeIframeByAttributes() {
     // Select all iframes with the attribute
-    const iframes = document.querySelectorAll('[data-video-iframe]');
+    const iframes = document.querySelectorAll('[video-bg-iframe]');
   
     iframes.forEach(iframe => {
       const container = iframe.parentElement; // Assume parent is the container
