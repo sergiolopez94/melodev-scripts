@@ -2,19 +2,19 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("JavaScript loaded and ready.");
 
     // Select the Webflow form using the specific ID
-    const form = document.querySelector('#wf-pf-form');
+    const form = document.querySelector('#wf-sorteo-form');
 
     if (!form) {
-        console.error('Form with ID "wf-pf-form" not found.');
+        console.error('Form with ID "wf-sorteo-form" not found.');
         return;
     }
     console.log("Form found:", form);
 
     // Select the submit button using the custom attribute for input[type="submit"]
-    const submitButton = form.querySelector('input[type="submit"][melodev="bt-submit"]');
+    const submitButton = form.querySelector('input[type="submit"][sorteo="bt-submit"]');
     
     if (!submitButton) {
-        console.error('Submit button with custom attribute melodev="bt-submit" not found.');
+        console.error('Submit button with custom attribute sorteo="bt-submit" not found.');
         return;
     }
     console.log('Submit button found:', submitButton);
@@ -28,9 +28,9 @@ document.addEventListener('DOMContentLoaded', function() {
         submitButton.disabled = true;
 
         // Check that all inputs are present
-        const nameInput = document.querySelector('#Name');
-        const lastInput = document.querySelector('#Last');
-        const ageInput = document.querySelector('#Age');
+        const nameInput = document.querySelector('#name');
+        const lastInput = document.querySelector('#last');
+        const ageInput = document.querySelector('#age');
         const emailInput = document.querySelector('#email');
         const phoneInput = document.querySelector('#phone');
         const cityInput = document.querySelector('#city');
