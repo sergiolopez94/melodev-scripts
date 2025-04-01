@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <title>PDF.js Custom Viewer</title>
   <link rel="stylesheet" href="pdf_viewer.css">
-  <!-- Font Awesome CDN -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Font Awesome for toolbar icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     html, body {
       margin: 0;
@@ -40,19 +40,19 @@
     }
 
     #viewerContainer {
-      position: absolute;
-      top: 54px; /* height of toolbar + margin */
-      bottom: 0;
-      left: 0;
-      right: 0;
-      overflow: auto;
-    }
+  position: absolute;     /* Required */
+  top: 54px;              /* Leave space for toolbar */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+}
+
   </style>
 </head>
 <body>
   <!-- Toolbar -->
   <div id="toolbar">
-    <button id="sidebarToggle" title="Toggle Sidebar"><i class="fas fa-book"></i></button>
     <button id="zoomOut" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
     <button id="zoomIn" title="Zoom In"><i class="fas fa-search-plus"></i></button>
     <button id="print" title="Print"><i class="fas fa-print"></i></button>
@@ -73,12 +73,15 @@
     const params = new URLSearchParams(window.location.search);
     const pdfUrl = params.get("file");
 
+    let pdfViewer;
+
     document.addEventListener("DOMContentLoaded", function () {
       const container = document.getElementById("viewerContainer");
 
       const eventBus = new pdfjsViewer.EventBus();
       const linkService = new pdfjsViewer.PDFLinkService({ eventBus });
-      const pdfViewer = new pdfjsViewer.PDFViewer({
+
+      pdfViewer = new pdfjsViewer.PDFViewer({
         container,
         eventBus,
         linkService
@@ -87,7 +90,7 @@
       linkService.setViewer(pdfViewer);
 
       eventBus.on("pagesinit", function () {
-        pdfViewer.currentScaleValue = "page-width";
+        pdfViewer.currentScaleValue = "auto"; // Responsive scaling
       });
 
       pdfjsLib.getDocument(pdfUrl).promise.then(pdfDoc => {
@@ -95,20 +98,19 @@
         linkService.setDocument(pdfDoc);
       });
 
-      // Zoom
+      // Toolbar buttons
       document.getElementById("zoomIn").addEventListener("click", () => {
         pdfViewer.currentScale += 0.1;
       });
+
       document.getElementById("zoomOut").addEventListener("click", () => {
         pdfViewer.currentScale -= 0.1;
       });
 
-      // Print
       document.getElementById("print").addEventListener("click", () => {
         window.print();
       });
 
-      // Download
       document.getElementById("download").addEventListener("click", () => {
         const link = document.createElement("a");
         link.href = pdfUrl;
@@ -118,9 +120,11 @@
         document.body.removeChild(link);
       });
 
-      // Sidebar placeholder
-      document.getElementById("sidebarToggle").addEventListener("click", () => {
-        alert("Sidebar not implemented in this minimal viewer.");
+      // Update on resize
+      window.addEventListener("resize", () => {
+        if (pdfViewer) {
+          pdfViewer.update();
+        }
       });
     });
   </script>
