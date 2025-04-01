@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>PDF.js Viewer</title>
+  <link rel="stylesheet" href="pdf_viewer.min.css">
+  <style>
+    #toolbarContainer {
+      background-color: #C7202F !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="outerContainer">
+    <!-- PDF.js Viewer will render here -->
+    <div id="viewerContainer">PDF Viewer Placeholder</div>
+  </div>
+
+  <script src="../build/pdf.js"></script>
+  <script src="viewer.js"></script>
+  <script>
+    window.addEventListener('webviewerloaded', function () {
+      if (window.innerWidth <= 768) {
+        PDFViewerApplication.initializedPromise.then(() => {
+          PDFViewerApplication.pdfSidebar.close();
+        });
+      }
+    });
+  </script>
+</body>
+</html>
