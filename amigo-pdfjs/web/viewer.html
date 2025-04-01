@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <title>PDF.js Custom Viewer</title>
   <link rel="stylesheet" href="pdf_viewer.css">
-  <!-- Font Awesome for toolbar icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     html, body {
@@ -40,18 +39,17 @@
     }
 
     #viewerContainer {
-  position: absolute;     /* Required */
-  top: 54px;              /* Leave space for toolbar */
-  bottom: 0;
-  left: 0;
-  right: 0;
-  overflow: auto;
-}
-
+      position: absolute;     /* Required by PDF.js */
+      top: 54px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      overflow: auto;
+    }
   </style>
 </head>
 <body>
-  <!-- Toolbar -->
+  <!-- Toolbar (Sidebar icon removed) -->
   <div id="toolbar">
     <button id="zoomOut" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
     <button id="zoomIn" title="Zoom In"><i class="fas fa-search-plus"></i></button>
@@ -90,7 +88,7 @@
       linkService.setViewer(pdfViewer);
 
       eventBus.on("pagesinit", function () {
-        pdfViewer.currentScaleValue = "auto"; // Responsive scaling
+        pdfViewer.currentScaleValue = "auto";
       });
 
       pdfjsLib.getDocument(pdfUrl).promise.then(pdfDoc => {
@@ -98,7 +96,7 @@
         linkService.setDocument(pdfDoc);
       });
 
-      // Toolbar buttons
+      // Zoom
       document.getElementById("zoomIn").addEventListener("click", () => {
         pdfViewer.currentScale += 0.1;
       });
@@ -107,10 +105,12 @@
         pdfViewer.currentScale -= 0.1;
       });
 
+      // Print
       document.getElementById("print").addEventListener("click", () => {
         window.print();
       });
 
+      // Download
       document.getElementById("download").addEventListener("click", () => {
         const link = document.createElement("a");
         link.href = pdfUrl;
@@ -120,7 +120,7 @@
         document.body.removeChild(link);
       });
 
-      // Update on resize
+      // Handle resize
       window.addEventListener("resize", () => {
         if (pdfViewer) {
           pdfViewer.update();
