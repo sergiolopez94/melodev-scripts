@@ -112,8 +112,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 } else {
                     console.log("Response body is empty");
-                    // If response is empty but status is 200, we can still redirect to a default URL
-                    window.location.href = 'https://www.virtual.puebloweb.com/aniversario-premio';
+                    alert('Unexpected response. Please try again.');
+                    submitButton.value = "Someter";
+                    submitButton.disabled = false;
                     return;
                 }
                 
@@ -121,9 +122,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const responseObj = Array.isArray(data) && data.length > 0 ? data[0] : data;
                 
                 if (responseObj) {
-                    // Get the redirectUrl or use the default
-                    const redirectUrl = responseObj.redirectUrl || 'https://www.virtual.puebloweb.com/aniversario-premio';
-                    
                     // Extract the prize information
                     const status = responseObj.status || false;
                     const message = responseObj.message || '';
@@ -144,13 +142,20 @@ document.addEventListener('DOMContentLoaded', function() {
                         prizeDesc
                     });
                     
-                    // Redirect to the prize page
-                    console.log("Redirecting to:", redirectUrl);
-                    window.location.href = redirectUrl;
+                    if (responseObj.redirectUrl) {
+                        console.log("Redirecting to:", responseObj.redirectUrl);
+                        window.location.href = responseObj.redirectUrl; // Redirect to the provided URL
+                    } else {
+                        console.error("No redirectUrl found in response:", responseObj);
+                        alert('Unexpected response. Please try again.');
+                        submitButton.value = "Someter";
+                        submitButton.disabled = false;
+                    }
                 } else {
                     console.error("Invalid response format:", data);
-                    // If we have a 200 OK but bad format, use default redirect
-                    window.location.href = 'https://www.virtual.puebloweb.com/aniversario-premio';
+                    alert('Unexpected response. Please try again.');
+                    submitButton.value = "Someter";  // Revert button text on error
+                    submitButton.disabled = false;
                 }
             } else {
                 console.error('Failed to submit form:', response.statusText);
@@ -166,9 +171,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Prize page logic
-    if (window.location.pathname.includes('aniversario-premio')) {
-        console.log("On prize page, retrieving stored prize information");
+    // Prize page logic - this will run on any page, but only do something on the prize page
+    // We'll use a more generic check that will work with any redirect URL
+    if (sessionStorage.getItem('prize_status') !== null) {
+        console.log("Prize information found in session, checking if we're on the prize page");
         
         // Get the stored prize information
         const status = sessionStorage.getItem('prize_status');
@@ -188,30 +194,43 @@ document.addEventListener('DOMContentLoaded', function() {
         const prizeElement = document.querySelector('[data-prize-name]');
         const prizeDescElement = document.querySelector('[data-prize-description]');
         
-        // Update elements if they exist
-        if (messageElement) messageElement.textContent = message;
-        if (prizeElement) prizeElement.textContent = prize;
-        if (prizeDescElement) prizeDescElement.textContent = prizeDesc;
-        
-        // You might also want to show/hide elements based on status
-        if (status === 'true') {
-            // Show winning elements
-            document.querySelectorAll('[data-prize-winner]').forEach(el => {
-                el.style.display = 'block';
-            });
-            // Hide non-winning elements
-            document.querySelectorAll('[data-prize-no-winner]').forEach(el => {
-                el.style.display = 'none';
-            });
-        } else {
-            // Show non-winning elements
-            document.querySelectorAll('[data-prize-no-winner]').forEach(el => {
-                el.style.display = 'block';
-            });
-            // Hide winning elements
-            document.querySelectorAll('[data-prize-winner]').forEach(el => {
-                el.style.display = 'none';
-            });
+        // Only proceed if we find any of these elements (which means we're on the prize page)
+        if (messageElement || prizeElement || prizeDescElement) {
+            console.log("Found prize elements on page, updating content");
+            
+            // Update elements if they exist
+            if (messageElement) messageElement.textContent = message;
+            if (prizeElement) prizeElement.textContent = prize;
+            if (prizeDescElement) prizeDescElement.textContent = prizeDesc;
+            
+            // You might also want to show/hide elements based on status
+            if (status === 'true') {
+                // Show winning elements
+                document.querySelectorAll('[data-prize-winner]').forEach(el => {
+                    el.style.display = 'block';
+                });
+                // Hide non-winning elements
+                document.querySelectorAll('[data-prize-no-winner]').forEach(el => {
+                    el.style.display = 'none';
+                });
+            } else {
+                // Show non-winning elements
+                document.querySelectorAll('[data-prize-no-winner]').forEach(el => {
+                    el.style.display = 'block';
+                });
+                // Hide winning elements
+                document.querySelectorAll('[data-prize-winner]').forEach(el => {
+                    el.style.display = 'none';
+                });
+            }
+            
+            // Clear the session storage after displaying the information
+            // This prevents the info from persisting across multiple page loads
+            // Comment this out if you want the info to persist until the browser is closed
+            // sessionStorage.removeItem('prize_status');
+            // sessionStorage.removeItem('prize_message');
+            // sessionStorage.removeItem('prize_name');
+            // sessionStorage.removeItem('prize_description');
         }
     }
 });
