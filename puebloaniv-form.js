@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log("JavaScript loaded and ready.");
 
-    // Select the Webflow form using the new specific ID
+    // Select the Webflow form using the specific ID
     const form = document.querySelector('#wf-form-aniversario');
 
     if (!form) {
@@ -29,9 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
         submitButton.disabled = true;
 
         // Get form fields
-        const nameInput = document.querySelector('#name');
-        const lastInput = document.querySelector('#last');
-        const ageInput = document.querySelector('#age');
+        const nameInput = document.querySelector('#Name');
+        const lastInput = document.querySelector('#Last');
+        const ageInput = document.querySelector('#Age');
         const emailInput = document.querySelector('#email');
         const phoneInput = document.querySelector('#phone');
         const cityInput = document.querySelector('#city');
@@ -80,10 +80,13 @@ document.addEventListener('DOMContentLoaded', function() {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Parsed JSON response data:", data);
-
-                if (data.redirectUrl) {
-                    console.log("Redirecting to:", data.redirectUrl);
-                    window.location.href = data.redirectUrl; // Redirect to the provided URL
+                
+                // Handle array response - get the first object in the array
+                const responseObj = Array.isArray(data) && data.length > 0 ? data[0] : data;
+                
+                if (responseObj && responseObj.redirectUrl) {
+                    console.log("Redirecting to:", responseObj.redirectUrl);
+                    window.location.href = responseObj.redirectUrl; // Redirect to the provided URL
                 } else {
                     console.error("No redirectUrl found in response:", data);
                     alert('Unexpected response. Please try again.');
