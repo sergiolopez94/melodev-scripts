@@ -29,9 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
         submitButton.disabled = true;
 
         // Get form fields
-        const nameInput = document.querySelector('#Name');
-        const lastInput = document.querySelector('#Last');
-        const ageInput = document.querySelector('#Age');
+        const nameInput = document.querySelector('#name');
+        const lastInput = document.querySelector('#last');
+        const ageInput = document.querySelector('#age');
         const emailInput = document.querySelector('#email');
         const phoneInput = document.querySelector('#phone');
         const cityInput = document.querySelector('#city');
