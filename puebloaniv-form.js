@@ -91,33 +91,36 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             console.log("Response received from webhook:", response);
-
-            if (response.ok) {
-                // Let's check the response text first
-                const responseText = await response.text();
-                console.log("Raw response text:", responseText);
-                
-                // Now try to parse it as JSON if it's not empty
-                let data;
-                if (responseText.trim()) {
-                    try {
-                        data = JSON.parse(responseText);
-                        console.log("Parsed JSON response data:", data);
-                    } catch (parseError) {
-                        console.error("JSON parse error:", parseError);
-                        alert('Invalid response format. Please try again.');
-                        submitButton.value = "Someter";
-                        submitButton.disabled = false;
-                        return;
-                    }
-                } else {
-                    console.log("Response body is empty");
-                    alert('Unexpected response. Please try again.');
+            
+            // Get the response text first (needed for both successful and error cases)
+            const responseText = await response.text();
+            console.log("Raw response text:", responseText);
+            
+            // Try to parse the response as JSON
+            let data;
+            if (responseText.trim()) {
+                try {
+                    data = JSON.parse(responseText);
+                    console.log("Parsed JSON response data:", data);
+                } catch (parseError) {
+                    console.error("JSON parse error:", parseError);
+                    alert('Invalid response format. Please try again.');
                     submitButton.value = "Someter";
                     submitButton.disabled = false;
                     return;
                 }
-                
+            }
+
+            // Handle 400 status with duplicate message
+            if (response.status === 400 && data && data.status === "duplicate") {
+                console.log("Duplicate receipt detected:", data);
+                alert('El código único ingresado ya fue utilizado. Gracias por participar.');
+                submitButton.value = "Someter";
+                submitButton.disabled = false;
+                return;
+            }
+            
+            if (response.ok) {
                 // Handle array response - get the first object in the array
                 const responseObj = Array.isArray(data) && data.length > 0 ? data[0] : data;
                 
@@ -158,8 +161,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     submitButton.disabled = false;
                 }
             } else {
-                console.error('Failed to submit form:', response.statusText);
-                alert('Failed to submit form. Please try again.');
+                // If it's not the duplicate case (which we already handled), show generic error
+                if (!(response.status === 400 && data && data.status === "duplicate")) {
+                    console.error('Failed to submit form:', response.statusText);
+                    alert('Failed to submit form. Please try again.');
+                }
                 submitButton.value = "Someter";  // Revert button text on failure
                 submitButton.disabled = false;
             }
