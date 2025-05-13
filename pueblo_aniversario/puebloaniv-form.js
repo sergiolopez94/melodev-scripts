@@ -80,17 +80,14 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Form data prepared with reCAPTCHA token");
 
         try {
-            // Add the specific n8n authentication header
-            const headers = new Headers();
-            headers.append('api-key', 'puebloaniv-form-2025-05-09');
-            
-            const response = await fetch('https://n8n.melodev.com/webhook/pueblo-aniversario-form', {
+            // Call the Supabase Edge Function instead of n8n directly
+            // Replace YOUR_PROJECT_REF with your actual Supabase project reference
+            const response = await fetch('https://fmafwossstvdymuvwmaa.supabase.co/functions/v1/pueblo-form-proxy', {
                 method: 'POST',
-                headers: headers,
-                body: formData,
+                body: formData, // Send FormData directly
             });
 
-            console.log("Response received from webhook:", response);
+            console.log("Response received from edge function:", response);
             
             // Get the response text first (needed for both successful and error cases)
             const responseText = await response.text();
@@ -114,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Handle 400 status with duplicate message
             if (response.status === 400 && data && data.status === "duplicate") {
                 console.log("Duplicate receipt detected:", data);
-                alert('El código único ingresado ya fue utilizado. Gracias por participar.');
+                alert('Este recibo ya fue sometido');
                 submitButton.value = "Someter";
                 submitButton.disabled = false;
                 return;
