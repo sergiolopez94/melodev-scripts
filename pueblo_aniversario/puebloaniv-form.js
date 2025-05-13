@@ -80,11 +80,11 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Form data prepared with reCAPTCHA token");
 
         try {
-            // Call the Supabase Edge Function instead of n8n directly
+            // Call our Supabase Edge Function instead of directly calling n8n
             // Replace YOUR_PROJECT_REF with your actual Supabase project reference
             const response = await fetch('https://fmafwossstvdymuvwmaa.supabase.co/functions/v1/pueblo-form-proxy', {
                 method: 'POST',
-                body: formData, // Send FormData directly
+                body: formData,
             });
 
             console.log("Response received from edge function:", response);
@@ -108,9 +108,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            // Handle 400 status with duplicate message
-            if (response.status === 400 && data && data.status === "duplicate") {
-                console.log("Duplicate receipt detected:", data);
+            // Very verbose debugging for duplicate detection
+            console.log("Checking for duplicate status in response:", data);
+            if (data) {
+                if (typeof data === 'object') {
+                    console.log("data.status =", data.status);
+                }
+                if (Array.isArray(data) && data.length > 0) {
+                    console.log("Array data[0].status =", data[0]?.status);
+                    if (data[0] && typeof data[0] === 'object') {
+                        console.log("data[0].body?.status =", data[0].body?.status);
+                    }
+                }
+            }
+
+            // Check for various places where the duplicate status might be
+            const isDuplicate = 
+                (data && data.status === "duplicate") ||
+                (Array.isArray(data) && data.length > 0 && data[0] && data[0].status === "duplicate") ||
+                (Array.isArray(data) && data.length > 0 && data[0] && data[0].body && data[0].body.status === "duplicate");
+            
+            if (isDuplicate) {
+                console.log("Duplicate receipt detected");
                 alert('Este recibo ya fue sometido');
                 submitButton.value = "Someter";
                 submitButton.disabled = false;
@@ -159,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             } else {
                 // If it's not the duplicate case (which we already handled), show generic error
-                if (!(response.status === 400 && data && data.status === "duplicate")) {
+                if (!isDuplicate) {
                     console.error('Failed to submit form:', response.statusText);
                     alert('Failed to submit form. Please try again.');
                 }
