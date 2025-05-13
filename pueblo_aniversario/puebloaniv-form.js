@@ -81,7 +81,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             // Call our Supabase Edge Function instead of directly calling n8n
-            // Replace YOUR_PROJECT_REF with your actual Supabase project reference
             const response = await fetch('https://fmafwossstvdymuvwmaa.supabase.co/functions/v1/pueblo-form-proxy', {
                 method: 'POST',
                 body: formData,
@@ -130,7 +129,13 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (isDuplicate) {
                 console.log("Duplicate receipt detected");
-                alert('Este recibo ya fue sometido');
+                // Store duplicate status in sessionStorage
+                sessionStorage.setItem('prize_status', 'duplicate');
+                sessionStorage.setItem('prize_message', 'Este recibo ya fue sometido');
+                sessionStorage.setItem('prize_name', '');
+                sessionStorage.setItem('prize_description', '');
+                
+                // Continue with normal flow - will let n8n handle the redirect
                 submitButton.value = "Someter";
                 submitButton.disabled = false;
                 return;
@@ -225,8 +230,41 @@ document.addEventListener('DOMContentLoaded', function() {
             if (prizeElement) prizeElement.textContent = prize;
             if (prizeDescElement) prizeDescElement.textContent = prizeDesc;
             
-            // You might also want to show/hide elements based on status
-            if (status === 'true') {
+            // Check for duplicate status
+            if (status === 'duplicate') {
+                // Show duplicate elements if they exist
+                const duplicateElements = document.querySelectorAll('[data-prize-duplicate]');
+                const duplicateSection = document.getElementById('duplicate-section');
+                
+                if (duplicateElements.length > 0 || duplicateSection) {
+                    console.log("Found duplicate elements, showing them");
+                    
+                    // Hide both winner and non-winner sections
+                    document.querySelectorAll('[data-prize-winner]').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                    document.querySelectorAll('[data-prize-no-winner]').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                    
+                    // Show duplicate elements
+                    duplicateElements.forEach(el => {
+                        el.style.display = 'block';
+                    });
+                    if (duplicateSection) {
+                        duplicateSection.style.display = 'block';
+                    }
+                } else {
+                    // No duplicate sections found, fallback to non-winner display
+                    console.log("No duplicate elements found, falling back to non-winner display");
+                    document.querySelectorAll('[data-prize-winner]').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                    document.querySelectorAll('[data-prize-no-winner]').forEach(el => {
+                        el.style.display = 'block';
+                    });
+                }
+            } else if (status === 'true') {
                 // Show winning elements
                 document.querySelectorAll('[data-prize-winner]').forEach(el => {
                     el.style.display = 'block';
@@ -235,6 +273,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.querySelectorAll('[data-prize-no-winner]').forEach(el => {
                     el.style.display = 'none';
                 });
+                // Hide duplicate elements if they exist
+                document.querySelectorAll('[data-prize-duplicate]').forEach(el => {
+                    el.style.display = 'none';
+                });
+                if (document.getElementById('duplicate-section')) {
+                    document.getElementById('duplicate-section').style.display = 'none';
+                }
             } else {
                 // Show non-winning elements
                 document.querySelectorAll('[data-prize-no-winner]').forEach(el => {
@@ -244,6 +289,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.querySelectorAll('[data-prize-winner]').forEach(el => {
                     el.style.display = 'none';
                 });
+                // Hide duplicate elements if they exist
+                document.querySelectorAll('[data-prize-duplicate]').forEach(el => {
+                    el.style.display = 'none';
+                });
+                if (document.getElementById('duplicate-section')) {
+                    document.getElementById('duplicate-section').style.display = 'none';
+                }
             }
             
             // Clear the session storage after displaying the information
