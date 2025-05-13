@@ -129,15 +129,36 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (isDuplicate) {
                 console.log("Duplicate receipt detected");
-                // Store duplicate status in sessionStorage
+                
+                // Store the duplicate status in session storage
                 sessionStorage.setItem('prize_status', 'duplicate');
                 sessionStorage.setItem('prize_message', 'Este recibo ya fue sometido');
                 sessionStorage.setItem('prize_name', '');
                 sessionStorage.setItem('prize_description', '');
                 
-                // Continue with normal flow - will let n8n handle the redirect
-                submitButton.value = "Someter";
-                submitButton.disabled = false;
+                // Extract redirectUrl if present (multiple possible locations)
+                let redirectUrl = null;
+                
+                if (data && data.redirectUrl) {
+                    redirectUrl = data.redirectUrl;
+                } else if (Array.isArray(data) && data.length > 0) {
+                    if (data[0] && data[0].redirectUrl) {
+                        redirectUrl = data[0].redirectUrl;
+                    } else if (data[0] && data[0].body && data[0].body.redirectUrl) {
+                        redirectUrl = data[0].body.redirectUrl;
+                    }
+                }
+                
+                // Redirect if we found a redirectUrl
+                if (redirectUrl) {
+                    console.log("Redirecting to:", redirectUrl);
+                    window.location.href = redirectUrl;
+                } else {
+                    console.error("No redirectUrl found for duplicate status");
+                    submitButton.value = "Someter";
+                    submitButton.disabled = false;
+                }
+                
                 return;
             }
             
