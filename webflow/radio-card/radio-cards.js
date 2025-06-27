@@ -1,16 +1,36 @@
 (function(){
-  // ES modules make currentScript null, so we need a fallback
-  const currentScript = document.currentScript || document.querySelector('script[src*="radio-cards.js"]');
-  
-  if (!currentScript || !currentScript.hasAttribute("data-radio")) {
-    console.log("ℹ️ data-radio attribute not found on script tag. Skipping radio-cards init.");
-    return;
-  }
+  try {
+    console.log("🔄 Radio-cards script executing...");
+    
+    // ES modules make currentScript null, so we need a fallback
+    const currentScript = document.currentScript;
+    const fallbackScript = document.querySelector('script[src*="radio-cards.js"]');
+    const scriptTag = currentScript || fallbackScript;
+    
+    console.log("🔍 Script detection:", {
+      currentScript: !!currentScript,
+      fallbackScript: !!fallbackScript,
+      finalScript: !!scriptTag
+    });
+    
+    if (!scriptTag) {
+      console.error("❌ No script tag found!");
+      return;
+    }
+    
+    if (!scriptTag.hasAttribute("data-radio")) {
+      console.log("ℹ️ data-radio attribute not found on script tag. Skipping radio-cards init.");
+      return;
+    }
+    
+    console.log("✅ data-radio attribute found!");
 
   // Read configuration directly from script tag attributes:
-  const defaultValue = currentScript.getAttribute("data-default-value") || "";
-  const selectedBg = currentScript.getAttribute("data-selected-bg");
-  const selectedColor = currentScript.getAttribute("data-selected-color");
+  const defaultValue = scriptTag.getAttribute("data-default-value") || "";
+  const selectedBg = scriptTag.getAttribute("data-selected-bg");
+  const selectedColor = scriptTag.getAttribute("data-selected-color");
+  
+  console.log("⚙️ Config loaded:", { defaultValue, selectedBg, selectedColor });
 
   document.addEventListener("DOMContentLoaded", () => {
     console.log("🟢 radio-cards.js loaded with attribute config!");
@@ -57,4 +77,8 @@
 
     updateSelection();
   });
+  
+  } catch (error) {
+    console.error("❌ Radio-cards script error:", error);
+  }
 })();
