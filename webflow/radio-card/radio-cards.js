@@ -1,42 +1,30 @@
 (function(){
   try {
-    console.log("🔄 Radio-cards script executing...");
-    
     // ES modules make currentScript null, so we need a fallback
     const currentScript = document.currentScript;
     const fallbackScript = document.querySelector('script[src*="radio-cards.js"]');
     const scriptTag = currentScript || fallbackScript;
     
-    console.log("🔍 Script detection:", {
-      currentScript: !!currentScript,
-      fallbackScript: !!fallbackScript,
-      finalScript: !!scriptTag
-    });
-    
     if (!scriptTag) {
-      console.error("❌ No script tag found!");
+      console.error("❌ Radio-cards: No script tag found!");
       return;
     }
     
     if (!scriptTag.hasAttribute("data-radio")) {
-      console.log("ℹ️ data-radio attribute not found on script tag. Skipping radio-cards init.");
+      console.log("ℹ️ Radio-cards: data-radio attribute not found on script tag. Skipping init.");
       return;
     }
-    
-    console.log("✅ data-radio attribute found!");
 
   // Read configuration directly from script tag attributes:
   const defaultValue = scriptTag.getAttribute("data-default-value") || "";
   const selectedBg = scriptTag.getAttribute("data-selected-bg");
   const selectedColor = scriptTag.getAttribute("data-selected-color");
-  
-  console.log("⚙️ Config loaded:", { defaultValue, selectedBg, selectedColor });
 
   function initRadioCards() {
-    console.log("🟢 radio-cards.js loaded with attribute config!");
+    console.log("🟢 Radio-cards initialized!");
 
     const radios = document.querySelectorAll('[data-radio-input="true"]');
-    console.log("🎯 Found radios:", radios.length);
+    console.log("🎯 Radio-cards: Found", radios.length, "radio inputs");
     
     // Hide radio inputs with display: none
     radios.forEach((radio) => {
@@ -59,7 +47,6 @@
             wrapper.style.color = selectedColor;
             wrapper.querySelectorAll("*").forEach(el => el.style.color = selectedColor);
           }
-          console.log("✅ ADDED .selected to", wrapper);
         } else {
           // Remove selected class and clear styling from unchecked radio
           wrapper.classList.remove("selected");
@@ -70,16 +57,12 @@
             wrapper.style.color = "";
             wrapper.querySelectorAll("*").forEach(el => el.style.color = "");
           }
-          console.log("❌ REMOVED .selected from", wrapper);
         }
       });
     }
 
     radios.forEach((radio) => {
-      radio.addEventListener("change", () => {
-        console.log("📻 Radio changed:", radio);
-        updateSelection();
-      });
+      radio.addEventListener("change", updateSelection);
     });
 
     if (defaultValue) {
@@ -87,7 +70,6 @@
         if (radio.getAttribute("data-radio-value") === defaultValue) {
           radio.checked = true;
           radio.dispatchEvent(new Event("change", { bubbles: true }));
-          console.log("⭐ Default radio set active by data-radio-value:", radio);
         }
       });
     }
@@ -97,14 +79,12 @@
 
   // Check if DOM is already ready or wait for it
   if (document.readyState === 'loading') {
-    console.log("⏳ DOM still loading, waiting for DOMContentLoaded...");
     document.addEventListener("DOMContentLoaded", initRadioCards);
   } else {
-    console.log("⚡ DOM already ready, initializing immediately...");
     initRadioCards();
   }
   
   } catch (error) {
-    console.error("❌ Radio-cards script error:", error);
+    console.error("❌ Radio-cards error:", error);
   }
 })();
