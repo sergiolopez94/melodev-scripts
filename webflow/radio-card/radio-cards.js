@@ -37,14 +37,20 @@
 
     const radios = document.querySelectorAll('[data-radio-input="true"]');
     console.log("🎯 Found radios:", radios.length);
+    
+    // Hide radio inputs with display: none
+    radios.forEach((radio) => {
+      radio.style.display = 'none';
+    });
 
     function updateSelection() {
-      const wrappers = document.querySelectorAll('[data-radio-wrapper="true"]');
-      wrappers.forEach((label) => label.classList.remove("selected"));
-
+      // Process each radio individually
       radios.forEach((radio) => {
         const wrapper = radio.closest('[data-radio-wrapper="true"]');
-        if (radio.checked && wrapper) {
+        if (!wrapper) return;
+        
+        if (radio.checked) {
+          // Add selected class and styling to checked radio
           wrapper.classList.add("selected");
           if (selectedBg) {
             wrapper.style.backgroundColor = selectedBg;
@@ -54,6 +60,17 @@
             wrapper.querySelectorAll("*").forEach(el => el.style.color = selectedColor);
           }
           console.log("✅ ADDED .selected to", wrapper);
+        } else {
+          // Remove selected class and clear styling from unchecked radio
+          wrapper.classList.remove("selected");
+          if (selectedBg) {
+            wrapper.style.backgroundColor = "";
+          }
+          if (selectedColor) {
+            wrapper.style.color = "";
+            wrapper.querySelectorAll("*").forEach(el => el.style.color = "");
+          }
+          console.log("❌ REMOVED .selected from", wrapper);
         }
       });
     }
