@@ -32,7 +32,7 @@
   
   console.log("⚙️ Config loaded:", { defaultValue, selectedBg, selectedColor });
 
-  document.addEventListener("DOMContentLoaded", () => {
+  function initRadioCards() {
     console.log("🟢 radio-cards.js loaded with attribute config!");
 
     const radios = document.querySelectorAll('[data-radio-input="true"]');
@@ -76,7 +76,16 @@
     }
 
     updateSelection();
-  });
+  }
+
+  // Check if DOM is already ready or wait for it
+  if (document.readyState === 'loading') {
+    console.log("⏳ DOM still loading, waiting for DOMContentLoaded...");
+    document.addEventListener("DOMContentLoaded", initRadioCards);
+  } else {
+    console.log("⚡ DOM already ready, initializing immediately...");
+    initRadioCards();
+  }
   
   } catch (error) {
     console.error("❌ Radio-cards script error:", error);
