@@ -8,7 +8,7 @@ Add this script to your Webflow page's custom code (before `</body>` tag):
 
 ```html
 <script async type="module"
-  src="https://your-cdn.com/radio-cards.js"
+  src="https://sergiolopez94.github.io/melodev-scripts/webflow/radio-card/radio-cards.js"
   data-radio
   data-default-value="Full Face"
   data-selected-bg="var(--green--950)"
@@ -44,7 +44,7 @@ You can use Webflow's CSS custom properties for colors:
 
 ```html
 <script async type="module"
-  src="https://your-cdn.com/radio-cards.js"
+  src="https://sergiolopez94.github.io/melodev-scripts/webflow/radio-card/radio-cards.js"
   data-radio
   data-selected-bg="var(--primary--500)"
   data-selected-color="var(--white)">
@@ -126,7 +126,7 @@ Apply to radio inputs when using `data-default-value`. The value should match yo
 ### Script Configuration:
 ```html
 <script async type="module"
-  src="https://your-cdn.com/radio-cards.js"
+  src="https://sergiolopez94.github.io/melodev-scripts/webflow/radio-card/radio-cards.js"
   data-radio
   data-default-value="Pro Plan"
   data-selected-bg="var(--primary--600)"
@@ -148,7 +148,7 @@ If you don't specify color data attributes, the script will only add the `.selec
 ```html
 <!-- Script without color attributes -->
 <script async type="module"
-  src="https://your-cdn.com/radio-cards.js"
+  src="https://sergiolopez94.github.io/melodev-scripts/webflow/radio-card/radio-cards.js"
   data-radio>
 </script>
 ```
@@ -197,7 +197,7 @@ To set a default selection from CMS:
 2. **In the script tag**, set `data-default-value` to a CMS field:
    ```html
    <script async type="module"
-     src="https://your-cdn.com/radio-cards.js"
+     src="https://sergiolopez94.github.io/melodev-scripts/webflow/radio-card/radio-cards.js"
      data-radio
      data-default-value="[CMS Field: Default Selection]">
    </script>
@@ -207,7 +207,7 @@ To set a default selection from CMS:
 You can also use CMS fields for colors:
 ```html
 <script async type="module"
-  src="https://your-cdn.com/radio-cards.js"
+  src="https://sergiolopez94.github.io/melodev-scripts/webflow/radio-card/radio-cards.js"
   data-radio
   data-selected-bg="[CMS Field: Brand Color]"
   data-selected-color="[CMS Field: Text Color]">
