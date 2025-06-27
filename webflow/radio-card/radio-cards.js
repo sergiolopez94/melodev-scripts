@@ -1,6 +1,8 @@
 (function(){
-  const currentScript = document.currentScript;
-  if (!currentScript.hasAttribute("data-radio")) {
+  // ES modules make currentScript null, so we need a fallback
+  const currentScript = document.currentScript || document.querySelector('script[src*="radio-cards.js"]');
+  
+  if (!currentScript || !currentScript.hasAttribute("data-radio")) {
     console.log("ℹ️ data-radio attribute not found on script tag. Skipping radio-cards init.");
     return;
   }
