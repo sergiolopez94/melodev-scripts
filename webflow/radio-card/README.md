@@ -7,7 +7,7 @@ A lightweight JavaScript library that transforms radio inputs into interactive c
 Add this script to your Webflow page's custom code (before `</body>` tag):
 
 ```html
-<script async type="module"
+<script async
   src="https://sergiolopez94.github.io/melodev-scripts/webflow/radio-card/radio-cards.js"
   data-radio
   data-default-value="Full Face"
@@ -43,7 +43,7 @@ Configure the behavior using data attributes on the script tag:
 You can use Webflow's CSS custom properties for colors:
 
 ```html
-<script async type="module"
+<script async
   src="https://sergiolopez94.github.io/melodev-scripts/webflow/radio-card/radio-cards.js"
   data-radio
   data-selected-bg="var(--primary--500)"
@@ -125,7 +125,7 @@ Apply to radio inputs when using `data-default-value`. The value should match yo
 
 ### Script Configuration:
 ```html
-<script async type="module"
+<script async
   src="https://sergiolopez94.github.io/melodev-scripts/webflow/radio-card/radio-cards.js"
   data-radio
   data-default-value="Pro Plan"
@@ -147,7 +147,7 @@ If you don't specify color data attributes, the script will only add the `.selec
 
 ```html
 <!-- Script without color attributes -->
-<script async type="module"
+<script async
   src="https://sergiolopez94.github.io/melodev-scripts/webflow/radio-card/radio-cards.js"
   data-radio>
 </script>
@@ -196,7 +196,7 @@ To set a default selection from CMS:
 1. **Go to your page/template settings**
 2. **In the script tag**, set `data-default-value` to a CMS field:
    ```html
-   <script async type="module"
+   <script async
      src="https://sergiolopez94.github.io/melodev-scripts/webflow/radio-card/radio-cards.js"
      data-radio
      data-default-value="[CMS Field: Default Selection]">
@@ -206,7 +206,7 @@ To set a default selection from CMS:
 ### Dynamic CMS Colors
 You can also use CMS fields for colors:
 ```html
-<script async type="module"
+<script async
   src="https://sergiolopez94.github.io/melodev-scripts/webflow/radio-card/radio-cards.js"
   data-radio
   data-selected-bg="[CMS Field: Brand Color]"
